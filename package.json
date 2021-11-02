@@ -21,10 +21,6 @@
   "keywords": [
     "react-native"
   ],
-  "author": {
-    "name": "Auth0",
-    "email": "support@auth0.com"
-  },
   "license": "MIT",
   "licenseFilename": "LICENSE",
   "readmeFilename": "README.md",
