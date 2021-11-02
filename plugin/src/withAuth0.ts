@@ -4,12 +4,7 @@ import {
   withAppBuildGradle,
   withAppDelegate,
 } from '@expo/config-plugins';
-import {
-  createGeneratedHeaderComment,
-  mergeContents,
-  MergeResults,
-  removeGeneratedContents,
-} from '@expo/config-plugins/build/utils/generateCode';
+import {mergeContents} from '@expo/config-plugins/build/utils/generateCode';
 
 const pkg = require('@sdacunha/react-native-auth0/package.json');
 
