@@ -23,22 +23,43 @@ const addAuth0GradleValues = (src, auth0Domain, auth0Scheme) => {
 exports.addAuth0GradleValues = addAuth0GradleValues;
 const withAndroidAuth0Gradle = config => {
   return config_plugins_1.withAppBuildGradle(config, config => {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
         process.env.EXPO_AUTH0_DOMAIN ||
-        ((_a = config.extra) === null || _a === void 0
+        ((_c =
+          (_b =
+            (_a = config.extra) === null || _a === void 0
+              ? void 0
+              : _a['auth0']) === null || _b === void 0
+            ? void 0
+            : _b['android']) === null || _c === void 0
           ? void 0
-          : _a['auth0Domain']);
+          : _c['domain']) ||
+        ((_e =
+          (_d = config.extra) === null || _d === void 0
+            ? void 0
+            : _d['auth0']) === null || _e === void 0
+          ? void 0
+          : _e['domain']);
       const auth0Scheme =
         process.env.EXPO_AUTH0_SCHEME_ANDROID ||
         process.env.EXPO_AUTH0_SCHEME ||
-        ((_b = config.extra) === null || _b === void 0
+        ((_h =
+          (_g =
+            (_f = config.extra) === null || _f === void 0
+              ? void 0
+              : _f['auth0']) === null || _g === void 0
+            ? void 0
+            : _g['android']) === null || _h === void 0
           ? void 0
-          : _b['auth0SchemeAndroid']) ||
-        ((_c = config.extra) === null || _c === void 0
+          : _h['scheme']) ||
+        ((_k =
+          (_j = config.extra) === null || _j === void 0
+            ? void 0
+            : _j['auth0']) === null || _k === void 0
           ? void 0
-          : _c['auth0Scheme']) ||
+          : _k['scheme']) ||
         '${applicationId}';
       config.modResults.contents = exports.addAuth0GradleValues(
         config.modResults.contents,
@@ -97,24 +118,43 @@ const withIOSAuth0AppDelegate = config => {
 };
 const withIOSAuth0InfoPList = config => {
   return config_plugins_1.withInfoPlist(config, config => {
-    var _a, _b;
-    if (!config.modResults.CFBundleURLTypes) {
-      config.modResults.CFBundleURLTypes = [];
+    var _a, _b, _c, _d, _e, _f, _g;
+    if (
+      !process.env.EXPO_AUTH0_NO_PLIST_MOD &&
+      !((_b =
+        (_a = config.extra) === null || _a === void 0
+          ? void 0
+          : _a['auth0']) === null || _b === void 0
+        ? void 0
+        : _b['noPlistMod'])
+    ) {
+      if (!config.modResults.CFBundleURLTypes) {
+        config.modResults.CFBundleURLTypes = [];
+      }
+      config.modResults.CFBundleURLTypes.push({
+        CFBundleURLName: 'auth0',
+        CFBundleURLSchemes: [
+          process.env.EXPO_AUTH0_SCHEME_IOS ||
+            process.env.EXPO_AUTH0_SCHEME ||
+            ((_e =
+              (_d =
+                (_c = config.extra) === null || _c === void 0
+                  ? void 0
+                  : _c['auth0']) === null || _d === void 0
+                ? void 0
+                : _d['ios']) === null || _e === void 0
+              ? void 0
+              : _e['scheme']) ||
+            ((_g =
+              (_f = config.extra) === null || _f === void 0
+                ? void 0
+                : _f['auth0']) === null || _g === void 0
+              ? void 0
+              : _g['scheme']) ||
+            '$(PRODUCT_BUNDLE_IDENTIFIER)',
+        ],
+      });
     }
-    config.modResults.CFBundleURLTypes.push({
-      CFBundleURLName: 'auth0',
-      CFBundleURLSchemes: [
-        process.env.EXPO_AUTH0_SCHEME_IOS ||
-          process.env.EXPO_AUTH0_SCHEME ||
-          ((_a = config.extra) === null || _a === void 0
-            ? void 0
-            : _a['auth0SchemeIOS']) ||
-          ((_b = config.extra) === null || _b === void 0
-            ? void 0
-            : _b['auth0Scheme']) ||
-          '$(PRODUCT_BUNDLE_IDENTIFIER)',
-      ],
-    });
     return config;
   });
 };
