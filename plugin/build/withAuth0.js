@@ -33,7 +33,7 @@ const withAndroidAuth0Gradle = config => {
       const auth0Scheme =
         ((_b = config.extra) === null || _b === void 0
           ? void 0
-          : _b['auth0Schema']) || '${applicationScheme}';
+          : _b['auth0Scheme']) || '${applicationId}';
       config.modResults.contents = exports.addAuth0GradleValues(
         config.modResults.contents,
         auth0Domain,
