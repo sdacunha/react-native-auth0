@@ -3,6 +3,7 @@ import {
   createRunOncePlugin,
   withAppBuildGradle,
   withAppDelegate,
+  withInfoPlist,
 } from '@expo/config-plugins';
 import {mergeContents} from '@expo/config-plugins/build/utils/generateCode';
 
@@ -96,9 +97,25 @@ const withIOSAuth0AppDelegate: ConfigPlugin = config => {
   });
 };
 
+const withIOSAuth0InfoPList: ConfigPlugin = config => {
+  return withInfoPlist(config, config => {
+    if (!config.modResults.CFBundleURLSchemes) {
+      config.modResults.CFBundleURLSchemes = [];
+    }
+    config.modResults.CFBundleURLTypes = [
+      {
+        CFBundleURLName: 'auth0',
+        CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
+      },
+    ];
+    return config;
+  });
+};
+
 const withAuth0: ConfigPlugin<void> = config => {
   config = withAndroidAuth0Gradle(config);
   config = withIOSAuth0AppDelegate(config);
+  config = withIOSAuth0InfoPList(config);
   return config;
 };
 
