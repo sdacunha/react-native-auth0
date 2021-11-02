@@ -15,8 +15,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/auth0/react-native-auth0.git",
-    "baseUrl": "https://github.com/auth0/react-native-auth0"
+    "url": "git+https://github.com/sdacunha/react-native-auth0.git",
+    "baseUrl": "https://github.com/sdacunha/react-native-auth0"
   },
   "keywords": [
     "react-native"
