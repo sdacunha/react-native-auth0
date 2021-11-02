@@ -18,6 +18,10 @@
     "url": "git+https://github.com/sdacunha/react-native-auth0.git",
     "baseUrl": "https://github.com/sdacunha/react-native-auth0"
   },
+  "author": {
+    "name": "sdacunha",
+    "username": "sdacunha"
+  },
   "keywords": [
     "react-native"
   ],
