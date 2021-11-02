@@ -26,6 +26,7 @@ const withAndroidAuth0Gradle = config => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
+        process.env.EXPO_AUTH0_DOMAIN_ANDROID ||
         process.env.EXPO_AUTH0_DOMAIN ||
         ((_c =
           (_b =
