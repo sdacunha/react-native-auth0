@@ -38,8 +38,12 @@ export const addAuth0GradleValues = (
 const withAndroidAuth0Gradle: ConfigPlugin = config => {
   return withAppBuildGradle(config, config => {
     if (config.modResults.language === 'groovy') {
-      const auth0Domain = config.extra?.['auth0Domain'];
-      const auth0Scheme = config.extra?.['auth0Scheme'] || '${applicationId}';
+      const auth0Domain =
+        process.env.EXPO_AUTH0_DOMAIN || config.extra?.['auth0Domain'];
+      const auth0Scheme =
+        process.env.EXPO_AUTH0_SCHEME ||
+        config.extra?.['auth0Scheme'] ||
+        '${applicationId}';
 
       config.modResults.contents = addAuth0GradleValues(
         config.modResults.contents,

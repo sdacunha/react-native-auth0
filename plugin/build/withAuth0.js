@@ -27,13 +27,16 @@ const withAndroidAuth0Gradle = config => {
     var _a, _b;
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
-        (_a = config.extra) === null || _a === void 0
+        process.env.EXPO_AUTH0_DOMAIN ||
+        ((_a = config.extra) === null || _a === void 0
           ? void 0
-          : _a['auth0Domain'];
+          : _a['auth0Domain']);
       const auth0Scheme =
+        process.env.EXPO_AUTH0_SCHEME ||
         ((_b = config.extra) === null || _b === void 0
           ? void 0
-          : _b['auth0Scheme']) || '${applicationId}';
+          : _b['auth0Scheme']) ||
+        '${applicationId}';
       config.modResults.contents = exports.addAuth0GradleValues(
         config.modResults.contents,
         auth0Domain,
