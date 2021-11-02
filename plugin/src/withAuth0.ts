@@ -99,12 +99,13 @@ const withIOSAuth0AppDelegate: ConfigPlugin = config => {
 
 const withIOSAuth0InfoPList: ConfigPlugin = config => {
   return withInfoPlist(config, config => {
-    config.modResults.CFBundleURLTypes = [
-      {
-        CFBundleURLName: 'auth0',
-        CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
-      },
-    ];
+    if (!config.modResults.CFBundleURLTypes) {
+      config.modResults.CFBundleURLTypes = [];
+    }
+    config.modResults.CFBundleURLTypes.push({
+      CFBundleURLName: 'auth0',
+      CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
+    });
     return config;
   });
 };
