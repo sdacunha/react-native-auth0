@@ -9,6 +9,10 @@
     "test:ci": "jest --coverage",
     "jsdocs": "jsdoc --configure .jsdoc.json --verbose"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://npm.pkg.github.com"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/auth0/react-native-auth0.git",
