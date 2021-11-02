@@ -66,7 +66,7 @@ Then, you need to run the following command to install the ios app pods with Coc
 
 ### Configuration
 
-You need make your Android and iOS applications aware that an authentication result will be received from the browser. This SDK makes use of the Android's Package Name and its analogous iOS's Product Bundle Identifier to generate the redirect URL. Each platform has its own set of instructions.
+You need make your Android and iOS applications aware that an authentication result will be received from the browser. This SDK makes use of the Android's Package Name and its analogous iOS's Product Bundle Identifier to generate the redirect URL. Each platform has its own set of instructions. Expo custom dev clients + EAS build projects can make use of the config plugin provided.
 
 #### Android
 
@@ -171,6 +171,77 @@ If your application is generated using the React Native CLI, the default value o
 If you use a value other than `$(PRODUCT_BUNDLE_IDENTIFIER)` in the `CFBundleURLSchemes` field of the `Info.plist` you will also need to pass it as the `customScheme` option parameter of the `authorize` and `clearSession` methods.
 
 > For more info please read the [React Native docs](https://facebook.github.io/react-native/docs/linking.html).
+
+#### Expo (EAS / SDK 41+)
+
+Open your app's `app.json` and add the following:
+
+```
+  "expo": {
+    plugins: ['react-native-auth0'],
+    ...
+  }
+```
+
+In order for android builds to work, you will need to specify an auth0 domain.
+There are two ways to do this with the config plugin:
+
+**With environment variable**:
+
+Set `EXPO_AUTH0_DOMAIN` or `EXPO_AUTH0_DOMAIN_ANDROID` in your eas.json (see: [Expo EAS Docs](https://docs.expo.dev/build-reference/variables/)) to set the values required in the build.gradle.
+
+This can be useful when you have multiple tenants that correspond with each EAS build target.
+
+**With app.json**
+
+Open your app's `app.json` and add the following under the "expo" key:
+
+```
+"expo":
+  "extra": {
+    "auth0": {
+      "domain": "samples.auth0.com"
+    }
+  },
+  ...
+}
+```
+
+or:
+
+```
+"expo": {
+  "extra": {
+    "auth0": {
+      "android": {
+        "domain": "samples.auth0.com"
+      }
+    }
+  },
+  ...
+}
+```
+
+**All possible environment values for the config plugin**:
+| Name | Description |
+| ----------- | ----------- |
+| EXPO_AUTH0_DOMAIN | Sets the top level domain that is used for Android setup only at this time |
+| EXPO_AUTH0_DOMAIN_ANDROID | Same as `EXPO_AUTH0_DOMAIN` |
+| EXPO_AUTH0_SCHEME | Sets the top level scheme that is used for both iOS and Android setup |
+| EXPO_AUTH0_SCHEME_IOS | Sets the iOS specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
+| EXPO_AUTH0_SCHEME_ANDROID | Sets the Android specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
+| EXPO_AUTH0_NO_PLIST_MOD | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist |
+
+**All possible app.json values (under the `expo` key)**:
+
+| Name                       | Description                                                                                           |
+| -------------------------- | ----------------------------------------------------------------------------------------------------- |
+| extra.auth0.domain         | Sets the top level domain that is used for Android setup only at this time                            |
+| extra.auth0.android.domain | Same as `extra.auth0.domain`                                                                          |
+| extra.auth0.scheme         | Sets the top level scheme that is used for both iOS and Android setup                                 |
+| extra.auth0.ios.scheme     | Sets the iOS specific scheme that is used for setup. Takes precendence over `extra.auth0.scheme`      |
+| extra.auth0.android.scheme | SSets the Android specific scheme that is used for setup. Takes precendence over `extra.auth0.scheme` |
+| extra.auth0.ios.noPlistMod | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist                                    |
 
 ### Callback URL(s)
 
