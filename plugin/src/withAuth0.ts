@@ -34,6 +34,7 @@ const withAndroidAuth0Gradle: ConfigPlugin = config => {
   return withAppBuildGradle(config, config => {
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
+        process.env.EXPO_AUTH0_DOMAIN_ANDROID ||
         process.env.EXPO_AUTH0_DOMAIN ||
         config.extra?.['auth0']?.['android']?.['domain'] ||
         config.extra?.['auth0']?.['domain'];
