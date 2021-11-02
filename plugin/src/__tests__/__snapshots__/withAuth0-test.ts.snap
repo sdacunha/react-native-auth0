@@ -88,13 +88,13 @@ static void InitializeFlipper(UIApplication *application) {
 }
 
 @end
-# @generated begin react-native-auth0 - expo prebuild (DO NOT MODIFY) sync-4120cf784d32ef9e73c7c71def92162e38e5087f
+// @generated begin react-native-auth0 - expo prebuild (DO NOT MODIFY) sync-4120cf784d32ef9e73c7c71def92162e38e5087f
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
   return [RCTLinkingManager application:app openURL:url options:options];
 }
-# @generated end react-native-auth0"
+// @generated end react-native-auth0"
 `;
 
 exports[`addAuth0GradleValues modifies the build.gradle 1`] = `
