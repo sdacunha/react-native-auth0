@@ -3,7 +3,7 @@ Object.defineProperty(exports, '__esModule', {value: true});
 exports.addAuth0AppDelegateCode = exports.addAuth0GradleValues = void 0;
 const config_plugins_1 = require('@expo/config-plugins');
 const generateCode_1 = require('@expo/config-plugins/build/utils/generateCode');
-const pkg = require('react-native-auth0/package.json');
+const pkg = require('@sdacunha/react-native-auth0/package.json');
 const addAuth0GradleValues = (src, auth0Domain, auth0Scheme) => {
   if (!auth0Domain) {
     throw Error('No auth0 domain specified in expo config (extra.auth0Domain)');
