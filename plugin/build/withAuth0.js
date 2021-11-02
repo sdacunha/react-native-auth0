@@ -91,9 +91,24 @@ const withIOSAuth0AppDelegate = config => {
     return config;
   });
 };
+const withIOSAuth0InfoPList = config => {
+  return config_plugins_1.withInfoPlist(config, config => {
+    if (!config.modResults.CFBundleURLSchemes) {
+      config.modResults.CFBundleURLSchemes = [];
+    }
+    config.modResults.CFBundleURLTypes = [
+      {
+        CFBundleURLName: 'auth0',
+        CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
+      },
+    ];
+    return config;
+  });
+};
 const withAuth0 = config => {
   config = withAndroidAuth0Gradle(config);
   config = withIOSAuth0AppDelegate(config);
+  config = withIOSAuth0InfoPList(config);
   return config;
 };
 exports.default = config_plugins_1.createRunOncePlugin(
