@@ -89,6 +89,16 @@ function appendContents(
 
 export const addAuth0AppDelegateCode = (src: string): string => {
   const tag = 'react-native-auth0';
+  if (!src.includes('#import <React/RCTLinkingManager.h>')) {
+    src = mergeContents({
+      src,
+      newSrc: '#import <React/RCTLinkingManager.h>',
+      anchor: '#import "AppDelegate.h"',
+      offset: 1,
+      tag,
+      comment: '//',
+    }).contents;
+  }
   if (!src.includes('// Linking API')) {
     return appendContents(
       src,
