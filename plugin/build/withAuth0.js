@@ -80,18 +80,21 @@ function appendContents(src, newSrc, tag, comment) {
 }
 const addAuth0AppDelegateCode = src => {
   const tag = 'react-native-auth0';
-  return appendContents(
-    src,
-    [
-      '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url',
-      '            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options',
-      '{',
-      '  return [RCTLinkingManager application:app openURL:url options:options];',
-      '}',
-    ].join('\n'),
-    tag,
-    '//',
-  ).contents;
+  if (!src.includes('// Linking API')) {
+    return appendContents(
+      src,
+      [
+        '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url',
+        '            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options',
+        '{',
+        '  return [RCTLinkingManager application:app openURL:url options:options];',
+        '}',
+      ].join('\n'),
+      tag,
+      '//',
+    ).contents;
+  }
+  return src;
 };
 exports.addAuth0AppDelegateCode = addAuth0AppDelegateCode;
 const withIOSAuth0AppDelegate = config => {
