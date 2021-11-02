@@ -99,9 +99,6 @@ const withIOSAuth0AppDelegate: ConfigPlugin = config => {
 
 const withIOSAuth0InfoPList: ConfigPlugin = config => {
   return withInfoPlist(config, config => {
-    if (!config.modResults.CFBundleURLSchemes) {
-      config.modResults.CFBundleURLSchemes = [];
-    }
     config.modResults.CFBundleURLTypes = [
       {
         CFBundleURLName: 'auth0',
