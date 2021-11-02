@@ -23,7 +23,7 @@ const addAuth0GradleValues = (src, auth0Domain, auth0Scheme) => {
 exports.addAuth0GradleValues = addAuth0GradleValues;
 const withAndroidAuth0Gradle = config => {
   return config_plugins_1.withAppBuildGradle(config, config => {
-    var _a, _b;
+    var _a, _b, _c;
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
         process.env.EXPO_AUTH0_DOMAIN ||
@@ -31,10 +31,14 @@ const withAndroidAuth0Gradle = config => {
           ? void 0
           : _a['auth0Domain']);
       const auth0Scheme =
+        process.env.EXPO_AUTH0_SCHEME_ANDROID ||
         process.env.EXPO_AUTH0_SCHEME ||
         ((_b = config.extra) === null || _b === void 0
           ? void 0
-          : _b['auth0Scheme']) ||
+          : _b['auth0SchemeAndroid']) ||
+        ((_c = config.extra) === null || _c === void 0
+          ? void 0
+          : _c['auth0Scheme']) ||
         '${applicationId}';
       config.modResults.contents = exports.addAuth0GradleValues(
         config.modResults.contents,
@@ -93,15 +97,24 @@ const withIOSAuth0AppDelegate = config => {
 };
 const withIOSAuth0InfoPList = config => {
   return config_plugins_1.withInfoPlist(config, config => {
-    if (!config.modResults.CFBundleURLSchemes) {
-      config.modResults.CFBundleURLSchemes = [];
+    var _a, _b;
+    if (!config.modResults.CFBundleURLTypes) {
+      config.modResults.CFBundleURLTypes = [];
     }
-    config.modResults.CFBundleURLTypes = [
-      {
-        CFBundleURLName: 'auth0',
-        CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
-      },
-    ];
+    config.modResults.CFBundleURLTypes.push({
+      CFBundleURLName: 'auth0',
+      CFBundleURLSchemes: [
+        process.env.EXPO_AUTH0_SCHEME_IOS ||
+          process.env.EXPO_AUTH0_SCHEME ||
+          ((_a = config.extra) === null || _a === void 0
+            ? void 0
+            : _a['auth0SchemeIOS']) ||
+          ((_b = config.extra) === null || _b === void 0
+            ? void 0
+            : _b['auth0Scheme']) ||
+          '$(PRODUCT_BUNDLE_IDENTIFIER)',
+      ],
+    });
     return config;
   });
 };

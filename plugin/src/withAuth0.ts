@@ -36,7 +36,9 @@ const withAndroidAuth0Gradle: ConfigPlugin = config => {
       const auth0Domain =
         process.env.EXPO_AUTH0_DOMAIN || config.extra?.['auth0Domain'];
       const auth0Scheme =
+        process.env.EXPO_AUTH0_SCHEME_ANDROID ||
         process.env.EXPO_AUTH0_SCHEME ||
+        config.extra?.['auth0SchemeAndroid'] ||
         config.extra?.['auth0Scheme'] ||
         '${applicationId}';
 
@@ -104,7 +106,13 @@ const withIOSAuth0InfoPList: ConfigPlugin = config => {
     }
     config.modResults.CFBundleURLTypes.push({
       CFBundleURLName: 'auth0',
-      CFBundleURLSchemes: ['$(PRODUCT_BUNDLE_IDENTIFIER)'],
+      CFBundleURLSchemes: [
+        process.env.EXPO_AUTH0_SCHEME_IOS ||
+          process.env.EXPO_AUTH0_SCHEME ||
+          config.extra?.['auth0SchemeIOS'] ||
+          config.extra?.['auth0Scheme'] ||
+          '$(PRODUCT_BUNDLE_IDENTIFIER)',
+      ],
     });
     return config;
   });
