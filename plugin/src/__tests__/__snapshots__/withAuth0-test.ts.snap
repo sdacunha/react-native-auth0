@@ -100,9 +100,11 @@ exports[`addAuth0AppDelegateCode modifies the AppDelegate 1`] = `
 #import \\"AppDelegate.h\\"
 
 #import <React/RCTBridge.h>
+// @generated begin react-native-auth0-import - expo prebuild (DO NOT MODIFY) sync-60472b7c5bde1787041c5dcbb357e68108fe1334
+#import <React/RCTLinkingManager.h>
+// @generated end react-native-auth0-import
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <React/RCTLinkingManager.h>
 #import <React/RCTConvert.h>
 
 #if defined(FB_SONARKIT_ENABLED) && __has_include(<FlipperKit/FlipperClient.h>)
@@ -166,21 +168,15 @@ static void InitializeFlipper(UIApplication *application) {
  #endif
 }
 
-// Universal Links
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
-  return [RCTLinkingManager application:application
-                   continueUserActivity:userActivity
-                     restorationHandler:restorationHandler];
-}
-
-@end
-// @generated begin react-native-auth0 - expo prebuild (DO NOT MODIFY) sync-4120cf784d32ef9e73c7c71def92162e38e5087f
+// @generated begin react-native-auth0-linking - expo prebuild (DO NOT MODIFY) sync-4120cf784d32ef9e73c7c71def92162e38e5087f
 - (BOOL)application:(UIApplication *)app openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
   return [RCTLinkingManager application:app openURL:url options:options];
 }
-// @generated end react-native-auth0"
+// @generated end react-native-auth0-linking
+@end
+"
 `;
 
 exports[`addAuth0GradleValues modifies the build.gradle 1`] = `
@@ -194,9 +190,9 @@ android {
     }
 
     defaultConfig {
-// @generated begin react-native-auth0 - expo prebuild (DO NOT MODIFY) sync-70e918fd29d121d0ab3fb51d8fcb77d93ab324b8
+// @generated begin react-native-auth0-manifest-placeholder - expo prebuild (DO NOT MODIFY) sync-70e918fd29d121d0ab3fb51d8fcb77d93ab324b8
 manifestPlaceholders = [auth0Domain: \\"com.example.app\\", auth0Scheme: \\"com.example.app\\"]
-// @generated end react-native-auth0
+// @generated end react-native-auth0-manifest-placeholder
         applicationId 'com.example.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

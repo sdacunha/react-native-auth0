@@ -24,9 +24,8 @@ export const addAuth0GradleValues = (
   if (!auth0Scheme) {
     throw Error('No auth0 scheme specified in expo config (extra.auth0Scheme)');
   }
-  const tag = 'react-native-auth0';
   return mergeContents({
-    tag,
+    tag: 'react-native-auth0-manifest-placeholder',
     src,
     newSrc: `manifestPlaceholders = [auth0Domain: "${auth0Domain}", auth0Scheme: "${auth0Scheme}"]`,
     anchor: /defaultConfig {/,
@@ -59,61 +58,39 @@ const withAndroidAuth0Gradle: ConfigPlugin = config => {
   });
 };
 
-function appendContents(
-  src: string,
-  newSrc: string,
-  tag: string,
-  comment: string,
-): MergeResults {
-  const header = createGeneratedHeaderComment(newSrc, tag, comment);
-  if (!src.includes(header)) {
-    // Ensure the old generated contents are removed.
-    const sanitizedTarget = removeGeneratedContents(src, tag);
-    const contentsToAdd = [
-      // @something
-      header,
-      // contents
-      newSrc,
-      // @end
-      `${comment} @generated end ${tag}`,
-    ].join('\n');
-
-    return {
-      contents: sanitizedTarget ?? src + contentsToAdd,
-      didMerge: true,
-      didClear: !!sanitizedTarget,
-    };
-  }
-  return {contents: src, didClear: false, didMerge: false};
-}
-
 export const addAuth0AppDelegateCode = (src: string): string => {
-  const tag = 'react-native-auth0';
-  if (!src.includes('#import <React/RCTLinkingManager.h>')) {
-    src = mergeContents({
-      src,
-      newSrc: '#import <React/RCTLinkingManager.h>',
-      anchor: '#import "AppDelegate.h"',
-      offset: 1,
-      tag,
-      comment: '//',
-    }).contents;
-  }
-  if (!src.includes('// Linking API')) {
-    return appendContents(
-      src,
-      [
+  let tempSrc = src;
+  // Tests to see if the RCTLinkingManager has already been added
+  if (
+    !/\[RCTLinkingManager.*application:.*openURL:.*options:.*\]/.test(tempSrc)
+  ) {
+    tempSrc = mergeContents({
+      src: tempSrc,
+      newSrc: [
         '- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url',
         '            options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options',
         '{',
         '  return [RCTLinkingManager application:app openURL:url options:options];',
         '}',
       ].join('\n'),
-      tag,
-      '//',
-    ).contents;
+      tag: 'react-native-auth0-linking',
+      anchor: /@end/,
+      comment: '//',
+      offset: 0,
+    }).contents;
   }
-  return src;
+  // Checks to see if RCTLinkingManager hasn't been imported
+  if (!/RCTLinkingManager\.h/.test(tempSrc)) {
+    tempSrc = mergeContents({
+      src: tempSrc,
+      newSrc: `#import <React/RCTLinkingManager.h>`,
+      anchor: /#import <React\/RCTBridge\.h>/,
+      offset: 1,
+      tag: 'react-native-auth0-import',
+      comment: '//',
+    }).contents;
+  }
+  return tempSrc;
 };
 
 const withIOSAuth0AppDelegate: ConfigPlugin = config => {
