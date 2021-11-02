@@ -1,7 +1,7 @@
 {
   "name": "@sdacunha/react-native-auth0",
   "title": "React Native Auth0",
-  "version": "2.10.9",
+  "version": "2.10.10",
   "description": "React Native toolkit for Auth0 API",
   "main": "index.js",
   "scripts": {
