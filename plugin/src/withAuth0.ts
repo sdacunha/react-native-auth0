@@ -34,12 +34,14 @@ const withAndroidAuth0Gradle: ConfigPlugin = config => {
   return withAppBuildGradle(config, config => {
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
-        process.env.EXPO_AUTH0_DOMAIN || config.extra?.['auth0Domain'];
+        process.env.EXPO_AUTH0_DOMAIN ||
+        config.extra?.['auth0']?.['android']?.['domain'] ||
+        config.extra?.['auth0']?.['domain'];
       const auth0Scheme =
         process.env.EXPO_AUTH0_SCHEME_ANDROID ||
         process.env.EXPO_AUTH0_SCHEME ||
-        config.extra?.['auth0SchemeAndroid'] ||
-        config.extra?.['auth0Scheme'] ||
+        config.extra?.['auth0']?.['android']?.['scheme'] ||
+        config.extra?.['auth0']?.['scheme'] ||
         '${applicationId}';
 
       config.modResults.contents = addAuth0GradleValues(
@@ -101,19 +103,24 @@ const withIOSAuth0AppDelegate: ConfigPlugin = config => {
 
 const withIOSAuth0InfoPList: ConfigPlugin = config => {
   return withInfoPlist(config, config => {
-    if (!config.modResults.CFBundleURLTypes) {
-      config.modResults.CFBundleURLTypes = [];
+    if (
+      !process.env.EXPO_AUTH0_NO_PLIST_MOD &&
+      !config.extra?.['auth0']?.['noPlistMod']
+    ) {
+      if (!config.modResults.CFBundleURLTypes) {
+        config.modResults.CFBundleURLTypes = [];
+      }
+      config.modResults.CFBundleURLTypes.push({
+        CFBundleURLName: 'auth0',
+        CFBundleURLSchemes: [
+          process.env.EXPO_AUTH0_SCHEME_IOS ||
+            process.env.EXPO_AUTH0_SCHEME ||
+            config.extra?.['auth0']?.['ios']?.['scheme'] ||
+            config.extra?.['auth0']?.['scheme'] ||
+            '$(PRODUCT_BUNDLE_IDENTIFIER)',
+        ],
+      });
     }
-    config.modResults.CFBundleURLTypes.push({
-      CFBundleURLName: 'auth0',
-      CFBundleURLSchemes: [
-        process.env.EXPO_AUTH0_SCHEME_IOS ||
-          process.env.EXPO_AUTH0_SCHEME ||
-          config.extra?.['auth0SchemeIOS'] ||
-          config.extra?.['auth0Scheme'] ||
-          '$(PRODUCT_BUNDLE_IDENTIFIER)',
-      ],
-    });
     return config;
   });
 };
