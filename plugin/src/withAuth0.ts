@@ -95,7 +95,7 @@ export const addAuth0AppDelegateCode = (src: string): string => {
       '}',
     ].join('\n'),
     tag,
-    '#',
+    '//',
   ).contents;
 };
 
