@@ -105,7 +105,7 @@ const withIOSAuth0InfoPList: ConfigPlugin = config => {
   return withInfoPlist(config, config => {
     if (
       !process.env.EXPO_AUTH0_NO_PLIST_MOD &&
-      !config.extra?.['auth0']?.['noPlistMod']
+      !config.extra?.['auth0']?.['ios']?.['noPlistMod']
     ) {
       if (!config.modResults.CFBundleURLTypes) {
         config.modResults.CFBundleURLTypes = [];
