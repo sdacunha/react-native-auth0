@@ -11,7 +11,7 @@ import {
   removeGeneratedContents,
 } from '@expo/config-plugins/build/utils/generateCode';
 
-const pkg = require('react-native-auth0/package.json');
+const pkg = require('@sdacunha/react-native-auth0/package.json');
 
 export const addAuth0GradleValues = (
   src: string,
