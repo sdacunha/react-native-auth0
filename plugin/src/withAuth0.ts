@@ -15,10 +15,10 @@ export const addAuth0GradleValues = (
   auth0Scheme?: string,
 ): string => {
   if (!auth0Domain) {
-    throw Error('No auth0 domain specified in expo config (extra.auth0Domain)');
+    throw Error('No auth0 domain specified in expo config');
   }
   if (!auth0Scheme) {
-    throw Error('No auth0 scheme specified in expo config (extra.auth0Scheme)');
+    throw Error('No auth0 scheme specified in expo config');
   }
   return mergeContents({
     tag: 'react-native-auth0-manifest-placeholder',

@@ -6,10 +6,10 @@ const generateCode_1 = require('@expo/config-plugins/build/utils/generateCode');
 const pkg = require('@sdacunha/react-native-auth0/package.json');
 const addAuth0GradleValues = (src, auth0Domain, auth0Scheme) => {
   if (!auth0Domain) {
-    throw Error('No auth0 domain specified in expo config (extra.auth0Domain)');
+    throw Error('No auth0 domain specified in expo config');
   }
   if (!auth0Scheme) {
-    throw Error('No auth0 scheme specified in expo config (extra.auth0Scheme)');
+    throw Error('No auth0 scheme specified in expo config');
   }
   return generateCode_1.mergeContents({
     tag: 'react-native-auth0-manifest-placeholder',
