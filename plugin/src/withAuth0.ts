@@ -30,19 +30,22 @@ export const addAuth0GradleValues = (
   }).contents;
 };
 
-const withAndroidAuth0Gradle: ConfigPlugin = config => {
+const withAndroidAuth0Gradle: ConfigPlugin<Auth0PluginConfig | void> = (
+  config,
+  {android, scheme, domain} = {},
+) => {
   return withAppBuildGradle(config, config => {
     if (config.modResults.language === 'groovy') {
       const auth0Domain =
         process.env.EXPO_AUTH0_DOMAIN_ANDROID ||
         process.env.EXPO_AUTH0_DOMAIN ||
-        config.extra?.['auth0']?.['android']?.['domain'] ||
-        config.extra?.['auth0']?.['domain'];
+        android?.domain ||
+        domain;
       const auth0Scheme =
         process.env.EXPO_AUTH0_SCHEME_ANDROID ||
         process.env.EXPO_AUTH0_SCHEME ||
-        config.extra?.['auth0']?.['android']?.['scheme'] ||
-        config.extra?.['auth0']?.['scheme'] ||
+        android?.scheme ||
+        scheme ||
         '${applicationId}';
 
       config.modResults.contents = addAuth0GradleValues(
@@ -94,7 +97,7 @@ export const addAuth0AppDelegateCode = (src: string): string => {
   return tempSrc;
 };
 
-const withIOSAuth0AppDelegate: ConfigPlugin = config => {
+const withIOSAuth0AppDelegate: ConfigPlugin<Auth0PluginConfig | void> = config => {
   return withAppDelegate(config, config => {
     const src = config.modResults.contents;
     config.modResults.contents = addAuth0AppDelegateCode(src);
@@ -102,12 +105,12 @@ const withIOSAuth0AppDelegate: ConfigPlugin = config => {
   });
 };
 
-const withIOSAuth0InfoPList: ConfigPlugin = config => {
+const withIOSAuth0InfoPList: ConfigPlugin<Auth0PluginConfig | void> = (
+  config,
+  {ios, scheme} = {},
+) => {
   return withInfoPlist(config, config => {
-    if (
-      !process.env.EXPO_AUTH0_NO_PLIST_MOD &&
-      !config.extra?.['auth0']?.['ios']?.['noPlistMod']
-    ) {
+    if (!process.env.EXPO_AUTH0_DISABLE_PLIST_MOD && !ios?.disablePListMod) {
       if (!config.modResults.CFBundleURLTypes) {
         config.modResults.CFBundleURLTypes = [];
       }
@@ -116,8 +119,8 @@ const withIOSAuth0InfoPList: ConfigPlugin = config => {
         CFBundleURLSchemes: [
           process.env.EXPO_AUTH0_SCHEME_IOS ||
             process.env.EXPO_AUTH0_SCHEME ||
-            config.extra?.['auth0']?.['ios']?.['scheme'] ||
-            config.extra?.['auth0']?.['scheme'] ||
+            ios?.scheme ||
+            scheme ||
             '$(PRODUCT_BUNDLE_IDENTIFIER)',
         ],
       });
@@ -126,10 +129,27 @@ const withIOSAuth0InfoPList: ConfigPlugin = config => {
   });
 };
 
-const withAuth0: ConfigPlugin<void> = config => {
-  config = withAndroidAuth0Gradle(config);
-  config = withIOSAuth0AppDelegate(config);
-  config = withIOSAuth0InfoPList(config);
+type Auth0IOSConfig = {
+  scheme?: string;
+  disablePListMod?: boolean;
+};
+
+type Auth0AndroidConfig = {
+  scheme?: string;
+  domain?: string;
+};
+
+type Auth0PluginConfig = {
+  ios?: Auth0IOSConfig;
+  android?: Auth0AndroidConfig;
+  scheme?: string;
+  domain?: string;
+};
+
+const withAuth0: ConfigPlugin<Auth0PluginConfig | void> = (config, props) => {
+  config = withAndroidAuth0Gradle(config, props);
+  config = withIOSAuth0AppDelegate(config, props);
+  config = withIOSAuth0InfoPList(config, props);
   return config;
 };
 

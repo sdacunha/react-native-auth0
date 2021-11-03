@@ -174,11 +174,11 @@ If you use a value other than `$(PRODUCT_BUNDLE_IDENTIFIER)` in the `CFBundleURL
 
 #### Expo (EAS / SDK 41+)
 
-Open your app's `app.json` and add the following:
+Open your app's `app.json` and add the following (note the second parameter with the empty object ({}) in the array is the plugin config):
 
 ```
   "expo": {
-    plugins: ['react-native-auth0'],
+    plugins: [['react-native-auth0', {}]],
     ...
   }
 ```
@@ -197,29 +197,19 @@ This can be useful when you have multiple tenants that correspond with each EAS 
 Open your app's `app.json` and add the following under the "expo" key:
 
 ```
-"expo":
-  "extra": {
-    "auth0": {
-      "domain": "samples.auth0.com"
-    }
-  },
-  ...
-}
+  "expo": {
+    "plugins": [['react-native-auth0', { "domain": 'samples.auth0.com' }]],
+    ...
+  }
 ```
 
 or:
 
 ```
-"expo": {
-  "extra": {
-    "auth0": {
-      "android": {
-        "domain": "samples.auth0.com"
-      }
-    }
-  },
-  ...
-}
+  "expo": {
+    "plugins": [['react-native-auth0', { "android": { "domain": 'samples.auth0.com' }]],
+    ...
+  }
 ```
 
 **All possible environment values for the config plugin**:
@@ -230,18 +220,18 @@ or:
 | EXPO_AUTH0_SCHEME | Sets the top level scheme that is used for both iOS and Android setup |
 | EXPO_AUTH0_SCHEME_IOS | Sets the iOS specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
 | EXPO_AUTH0_SCHEME_ANDROID | Sets the Android specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
-| EXPO_AUTH0_NO_PLIST_MOD | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist |
+| EXPO_AUTH0_DISABLE_PLIST_MOD | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist |
 
 **All possible app.json values (under the `expo` key)**:
 
-| Name                       | Description                                                                                           |
-| -------------------------- | ----------------------------------------------------------------------------------------------------- |
-| extra.auth0.domain         | Sets the top level domain that is used for Android setup only at this time                            |
-| extra.auth0.android.domain | Same as `extra.auth0.domain`                                                                          |
-| extra.auth0.scheme         | Sets the top level scheme that is used for both iOS and Android setup                                 |
-| extra.auth0.ios.scheme     | Sets the iOS specific scheme that is used for setup. Takes precendence over `extra.auth0.scheme`      |
-| extra.auth0.android.scheme | SSets the Android specific scheme that is used for setup. Takes precendence over `extra.auth0.scheme` |
-| extra.auth0.ios.noPlistMod | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist                                    |
+| Name                | Description                                                                              |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| domain              | Sets the top level domain that is used for Android setup only at this time               |
+| android.domain      | Same as `domain`                                                                         |
+| scheme              | Sets the top level scheme that is used for both iOS and Android setup                    |
+| ios.scheme          | Sets the iOS specific scheme that is used for setup. Takes precendence over `scheme`     |
+| android.scheme      | Sets the Android specific scheme that is used for setup. Takes precendence over `scheme` |
+| ios.disablePlistMod | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist                       |
 
 ### Callback URL(s)
 
