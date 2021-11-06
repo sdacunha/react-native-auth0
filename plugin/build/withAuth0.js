@@ -90,33 +90,10 @@ const withIOSAuth0AppDelegate = config => {
     return config;
   });
 };
-const withIOSAuth0InfoPList = (config, {ios, scheme} = {}) => {
-  return config_plugins_1.withInfoPlist(config, config => {
-    if (
-      !process.env.EXPO_AUTH0_DISABLE_PLIST_MOD &&
-      !(ios === null || ios === void 0 ? void 0 : ios.disablePListMod)
-    ) {
-      if (!config.modResults.CFBundleURLTypes) {
-        config.modResults.CFBundleURLTypes = [];
-      }
-      config.modResults.CFBundleURLTypes.push({
-        CFBundleURLName: 'auth0',
-        CFBundleURLSchemes: [
-          process.env.EXPO_AUTH0_SCHEME_IOS ||
-            process.env.EXPO_AUTH0_SCHEME ||
-            (ios === null || ios === void 0 ? void 0 : ios.scheme) ||
-            scheme ||
-            '$(PRODUCT_BUNDLE_IDENTIFIER)',
-        ],
-      });
-    }
-    return config;
-  });
-};
 const withAuth0 = (config, props) => {
   config = withAndroidAuth0Gradle(config, props);
   config = withIOSAuth0AppDelegate(config, props);
-  config = withIOSAuth0InfoPList(config, props);
+  // config = withIOSAuth0InfoPList(config, props);
   return config;
 };
 exports.default = config_plugins_1.createRunOncePlugin(

@@ -105,29 +105,29 @@ const withIOSAuth0AppDelegate: ConfigPlugin<Auth0PluginConfig | void> = config =
   });
 };
 
-const withIOSAuth0InfoPList: ConfigPlugin<Auth0PluginConfig | void> = (
-  config,
-  {ios, scheme} = {},
-) => {
-  return withInfoPlist(config, config => {
-    if (!process.env.EXPO_AUTH0_DISABLE_PLIST_MOD && !ios?.disablePListMod) {
-      if (!config.modResults.CFBundleURLTypes) {
-        config.modResults.CFBundleURLTypes = [];
-      }
-      config.modResults.CFBundleURLTypes.push({
-        CFBundleURLName: 'auth0',
-        CFBundleURLSchemes: [
-          process.env.EXPO_AUTH0_SCHEME_IOS ||
-            process.env.EXPO_AUTH0_SCHEME ||
-            ios?.scheme ||
-            scheme ||
-            '$(PRODUCT_BUNDLE_IDENTIFIER)',
-        ],
-      });
-    }
-    return config;
-  });
-};
+// const withIOSAuth0InfoPList: ConfigPlugin<Auth0PluginConfig | void> = (
+//   config,
+//   {ios, scheme} = {},
+// ) => {
+//   return withInfoPlist(config, config => {
+//     if (!process.env.EXPO_AUTH0_DISABLE_PLIST_MOD && !ios?.disablePListMod) {
+//       if (!config.modResults.CFBundleURLTypes) {
+//         config.modResults.CFBundleURLTypes = [];
+//       }
+//       config.modResults.CFBundleURLTypes.push({
+//         CFBundleURLName: 'auth0',
+//         CFBundleURLSchemes: [
+//           process.env.EXPO_AUTH0_SCHEME_IOS ||
+//             process.env.EXPO_AUTH0_SCHEME ||
+//             ios?.scheme ||
+//             scheme ||
+//             '$(PRODUCT_BUNDLE_IDENTIFIER)',
+//         ],
+//       });
+//     }
+//     return config;
+//   });
+// };
 
 type Auth0IOSConfig = {
   scheme?: string;
@@ -149,7 +149,7 @@ type Auth0PluginConfig = {
 const withAuth0: ConfigPlugin<Auth0PluginConfig | void> = (config, props) => {
   config = withAndroidAuth0Gradle(config, props);
   config = withIOSAuth0AppDelegate(config, props);
-  config = withIOSAuth0InfoPList(config, props);
+  // config = withIOSAuth0InfoPList(config, props);
   return config;
 };
 
