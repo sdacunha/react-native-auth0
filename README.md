@@ -31,6 +31,7 @@ Version **2.9.0** introduced a **breaking change** to the Android configuration.
 - The [React Native Sample](https://github.com/auth0-samples/auth0-react-native-sample/tree/master/00-Login) has complete, running iOS and Android applications you can try.
 - The [Usage](#usage) section below covers specific use cases outside of basic authentication.
 - The [API documentation](https://auth0.github.io/react-native-auth0/) is generated from the code and explains all methods that are able to be used.
+- The [FAQ](FAQ.md) answers some common questions about react-native-auth0.
 
 ## Requirements
 
@@ -42,6 +43,7 @@ This SDK attempts to follow [semver](https://semver.org/) in a best-effort basis
 
 | React Native SDK | Auth0 SDK |
 | :--------------: | :-------: |
+|     v0.65.0      |  v2.11.0  |
 |     v0.62.2      |  v2.5.0   |
 |     v0.60.5      |  v2.0.0   |
 | v0.59.0 or lower |  v1.6.0   |
@@ -176,7 +178,7 @@ If you use a value other than `$(PRODUCT_BUNDLE_IDENTIFIER)` in the `CFBundleURL
 
 Open your app's `app.json` and add the following (note the second parameter with the empty object ({}) in the array is the plugin config):
 
-```
+```json
   "expo": {
     plugins: [['react-native-auth0', {}]],
     ...
@@ -184,19 +186,9 @@ Open your app's `app.json` and add the following (note the second parameter with
 ```
 
 In order for android builds to work, you will need to specify an auth0 domain.
-There are two ways to do this with the config plugin:
-
-**With environment variable**:
-
-Set `EXPO_AUTH0_DOMAIN` or `EXPO_AUTH0_DOMAIN_ANDROID` in your eas.json (see: [Expo EAS Docs](https://docs.expo.dev/build-reference/variables/)) to set the values required in the build.gradle.
-
-This can be useful when you have multiple tenants that correspond with each EAS build target.
-
-**With app.json**
-
 Open your app's `app.json` and add the following under the "expo" key:
 
-```
+```json
   "expo": {
     "plugins": [['react-native-auth0', { "domain": 'samples.auth0.com' }]],
     ...
@@ -205,33 +197,23 @@ Open your app's `app.json` and add the following under the "expo" key:
 
 or:
 
-```
+```json
   "expo": {
     "plugins": [['react-native-auth0', { "android": { "domain": 'samples.auth0.com' }]],
     ...
   }
 ```
 
-**All possible environment values for the config plugin**:
-| Name | Description |
-| ----------- | ----------- |
-| EXPO_AUTH0_DOMAIN | Sets the top level domain that is used for Android setup only at this time |
-| EXPO_AUTH0_DOMAIN_ANDROID | Same as `EXPO_AUTH0_DOMAIN` |
-| EXPO_AUTH0_SCHEME | Sets the top level scheme that is used for both iOS and Android setup |
-| EXPO_AUTH0_SCHEME_IOS | Sets the iOS specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
-| EXPO_AUTH0_SCHEME_ANDROID | Sets the Android specific scheme that is used for setup. Takes precendence over `EXPO_AUTH0_SCHEME` |
-| EXPO_AUTH0_DISABLE_PLIST_MOD | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist |
-
 **All possible app.json values (under the `expo` key)**:
-
-| Name                | Description                                                                              |
+| Name | Description |
 | ------------------- | ---------------------------------------------------------------------------------------- |
-| domain              | Sets the top level domain that is used for Android setup only at this time               |
-| android.domain      | Same as `domain`                                                                         |
-| scheme              | Sets the top level scheme that is used for both iOS and Android setup                    |
-| ios.scheme          | Sets the iOS specific scheme that is used for setup. Takes precendence over `scheme`     |
-| android.scheme      | Sets the Android specific scheme that is used for setup. Takes precendence over `scheme` |
-| ios.disablePlistMod | Do not add an entry under `CFBundleURLTypes` in the iOS Info.plist                       |
+| domain | Sets the top level domain that is used for Android setup only at this time |
+| android.domain | Same as `domain` |
+| scheme | Sets the top level scheme that is used for both iOS and Android setup |
+| ios.scheme | Sets the iOS specific scheme that is used for setup. Takes precendence over `scheme` |
+| android.scheme | Sets the Android specific scheme that is used for setup. Takes precendence over `scheme` |
+
+If you need dynamic values, consider using a [`config.js`](https://docs.expo.dev/workflow/configuration/#dynamic-configuration-with-appconfigjs) file;
 
 ### Callback URL(s)
 
@@ -287,24 +269,19 @@ auth0.webAuth
 
 > Web Authentication flows require a Browser application installed on the device. When no Browser is available, an error of type `a0.browser_not_available` will be raised via the provided callback.
 
-##### Disable Single Sign On (iOS 13+ only)
+##### SSO Alert Box (iOS)
 
-Use the `ephemeralSession` parameter to disable SSO on iOS 13+. This way iOS will not display the consent popup that otherwise shows up when SSO is enabled. It has no effect on older versions of iOS or Android.
+![ios-sso-alert](assets/ios-sso-alert.png)
 
-```js
-auth0.webAuth
-  .authorize({scope: 'openid email profile'}, {ephemeralSession: true})
-  .then(credentials => console.log(credentials))
-  .catch(error => console.log(error));
-```
+Check the [FAQ](FAQ.md) for more information about the alert box that pops up **by default** when using Web Auth on iOS.
+
+> See also [this blog post](https://developer.okta.com/blog/2022/01/13/mobile-sso) for a detailed overview of Single Sign-On (SSO) on iOS.
 
 #### Logout
 
 ```js
 auth0.webAuth.clearSession().catch(error => console.log(error));
 ```
-
-If you're using the `ephemeralSession` parameter, you do not need to call `clearSession()` to perform logout on iOS, as there will be no cookies to remove. Just deleting the credentials will suffice. You will still need to call `clearSession()` on Android, though, as `ephemeralSession` is iOS-only.
 
 ### Authentication API
 
@@ -342,6 +319,22 @@ This endpoint requires an Access Token that was granted the `/userinfo` audience
 ```js
 auth0.auth
   .refreshToken({refreshToken: 'the user refresh_token'})
+  .then(console.log)
+  .catch(console.error);
+```
+
+#### Login using MFA with One Time Password code
+
+This call requires the client to have the _MFA_ Client Grant Type enabled. Check [this article](https://auth0.com/docs/clients/client-grant-types) to learn how to enable it.
+
+When you sign in to a multifactor authentication enabled connection using the `passwordRealm` method, you receive an error stating that MFA is required for that user along with an `mfa_token` value. Use this value to call `loginWithOTP` and complete the MFA flow passing the One Time Password from the enrolled MFA code generator app.
+
+```js
+auth0.auth
+  .loginWithOTP({
+    mfaToken: error.json.mfa_token,
+    otp: '{user entered OTP}',
+  })
   .then(console.log)
   .catch(console.error);
 ```
@@ -390,7 +383,7 @@ or
 ```js
 auth0.auth
   .loginWithSMS({
-    phoneNumber: 'info@auth0.com',
+    phoneNumber: '+5491159991000',
     code: '123456',
   })
   .then(console.log)
